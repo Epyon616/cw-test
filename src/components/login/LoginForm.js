@@ -23,6 +23,7 @@ export class LoginForm extends Component {
   handleSubmit(event) {
     event.preventDefault();
     const { username, password } = this.state;
+
     if (username && password) {
        this.props.loginUser(username, password);
        this.props.history.push('/products');
@@ -66,8 +67,6 @@ export class LoginForm extends Component {
             </Form>
           </Col>
         </Row>
-
-
       </Container>
     );
   }

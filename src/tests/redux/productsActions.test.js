@@ -19,7 +19,7 @@ describe("Products Actions", () => {
         localStorage.setItem('authKey', 'abcd1234');
   
         nock(API_URL)
-        .post('/test/product-feed',{ authKey: 'abcd1234'})
+        .post('/test/product-feed', { authKey: 'abcd1234' })
         .reply(200, products);
   
         return store.dispatch(fetchProducts()).then(() => {
