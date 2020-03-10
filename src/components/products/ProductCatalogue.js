@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Col, Container, Form, Row, Table } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import fetchProducts from '../../redux/dispatchers/productsDispatcher';
+import FilterForm from './FilterForm';
+import ProductTable from './ProductTable';
 
 export class ProductCatalogue extends Component {
   constructor(props) {
     super(props);
     this.shouldComponentRender = this.shouldComponentRender.bind(this);
+    this.setFilterValue = this.setFilterValue.bind(this);
     this.state = {
       filterValue: '',
     }
@@ -24,21 +27,19 @@ export class ProductCatalogue extends Component {
   }
 
   setFilterValue(value) {
-    this.setState({filterValue: value });
+    this.setState({ filterValue: value });
   }
 
   filterProducts() {
     const { products } = this.props;
     const { filterValue } = this.state;
 
-    let productList = []
+    let productList = products.products;
     
     if(filterValue) {
       productList = products.products.filter((product) => { 
         return product.product_type === filterValue 
       });
-    } else {
-      productList = products.products;
     }
 
     return productList;
@@ -54,57 +55,25 @@ export class ProductCatalogue extends Component {
           </Row>
           <Row>
             <Col>
-              <Form>
-                <Form.Group>
-                  <Form.Label>Filter:</Form.Label>
-                  <Form.Control as="select" onChange={e => this.setFilterValue(e.target.value)}>
-                    <option value="APRON">APRON</option>
-                    <option value="BLAZER">BLAZER</option>
-                    <option value="CAP">CAP</option>
-                    <option value="SHIRT">SHIRT</option>
-                  </Form.Control>
-                </Form.Group>
-              </Form>
+              <FilterForm onChange={this.setFilterValue} />
             </Col>
           </Row>
           <Row className="justify-content-md-center">
             <Col>
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Size</th>
-                    <th>Product type</th>
-                    <th>Location</th>
-                    <th>Stock level</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  { products.map((product, i) => {
-                    return(
-                      <tr key={`product-${i}`}>
-                        <td>{product.id}</td>
-                        <td>{product.title}</td>
-                        <td>{product.size}</td>
-                        <td>{product.product_type}</td>
-                        <td>{product.location}</td>
-                        <td>{product.stock_level}</td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </Table>
+              <ProductTable products={products} />
             </Col>
           </Row>
         </Container>
       );
     } else {
       return (
-        <div>Loading...</div>
+        <Container fluid>
+          <Row className="justify-content-md-center">
+            <div>Loading...</div>
+          </Row>
+        </Container>
       );
     }
-
   }
 }
 
